@@ -1,0 +1,20 @@
+services:
+  n8n:
+    build: .
+    restart: always
+    ports:
+      # Exposes the n8n UI on http://localhost:5679
+      - "127.0.0.1:5679:5678"
+    environment:
+      - N8N_HOST=localhost:5679
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://localhost:5679
+      # Set your timezone to ensure cron jobs run at the correct time
+      - GENERIC_TIMEZONE=Europe/Berlin
+      # Allows reading local files for the workflow, like our config
+      - N8N_READ_FILES_ALLOW_ABSOLUTE_PATH=true
+    volumes:
+      # Persists n8n data (workflows, credentials) in a local folder
+      - ./n8n_data:/home/node/.n8n
+      # Mounts the competitor config file into the container
+      - ./competitors.yaml:/data/competitors.yaml 
